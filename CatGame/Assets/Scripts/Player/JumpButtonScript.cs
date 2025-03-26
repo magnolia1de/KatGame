@@ -2,21 +2,22 @@ using UnityEngine;
 
 public class JumpButtonScript : MonoBehaviour
 {
-    public float jumpForce = 5f;
+    public float jumpForce = 10f;
     public Rigidbody2D rb;
-
-    private void Start()
-    {
-        
-        if (rb == null)
-        {
-            Debug.LogError("Missing Rigidbody2D component! Add it to the object.");
-        }
-    }
 
     public void Jump()
     {
         Debug.Log("Jump");
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+
+        if (rb == null)
+        {
+            Debug.LogError("Missing Rigidbody2D component! Add it to the object.");
+            return;
+        }
+
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        Debug.Log("Jump");
+
     }
+
 }
