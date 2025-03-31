@@ -1,21 +1,20 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
     public float speed = 5f;
     public float jumpForce = 5f;
-    public int playerLives = 3;
     public int playerScore = 0;
 
     private Rigidbody2D rb;
+    public TMP_Text pointsText;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        if (rb == null)
-        {
-            Debug.LogError("Brak komponentu Rigidbody2D na obiekcie Player!");
-        }
+        UpdatePointsUI();
     }
 
     public void Move(float horizontalInput)
@@ -27,7 +26,7 @@ public class PlayerController : MonoBehaviour
     {
         if (rb == null) return;
 
-        if (Mathf.Abs(rb.linearVelocity.y) < 0.01f) // Sprawdza, czy gracz jest na ziemi
+        if (Mathf.Abs(rb.linearVelocity.y) < 0.01f)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
@@ -37,18 +36,31 @@ public class PlayerController : MonoBehaviour
     {
         playerScore++;
         Debug.Log("Zdoby�e� punkt! Aktualny wynik: " + playerScore);
+        UpdatePointsUI();
         // Mo�na tu doda� aktualizacj� UI
     }
 
-    public void LoseLife()
+    private void UpdatePointsUI()
     {
-        playerLives--;
-        Debug.Log("Straci�e� �ycie! Pozosta�e �ycia: " + playerLives);
-
-        if (playerLives <= 0)
+        if (pointsText != null)
         {
-            Debug.Log("Gra sko�czona!");
-            // Mo�na tu doda� kod do ko�ca gry (np. restart poziomu)
+            pointsText.text = playerScore.ToString();
         }
+    }
+
+    public void LoseGame()
+    {
+        Debug.Log("Przegrales!");
+        //jeśli to pierwsza gra gracza to tutorial niezaloczony, trzeba zagrać od początku
+        //podliczenie punktów i usunięcie ich
+    }
+
+    public void LevelFinish()
+    {
+        Debug.Log("Gratulacje! Wygra?e?!");
+        //jeśli to pierwsza gra gracza to tutorial zaliczony, przejście do poziomu 1
+        //usunięcie wszystkich punktów jeśli to był tutorial, jeśli zwykła gra to podliczenie punktów i przejście do
+        //kolejnego poziomu
+        //jeśli to nie pierwsza gra to przejście do kolejnego poziomu
     }
 }

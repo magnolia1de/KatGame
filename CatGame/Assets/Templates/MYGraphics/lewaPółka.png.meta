@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: bb851d095c9576a4bbb93f1f3f5d7367
+guid: f50d145ea696cad4ebeae6eee49e48d1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4903792038252174299
-    second: "Pod\u0142oga_0"
+      213: -7118610705216475210
+    second: "lewaP\xF3\u0142ka_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,12 +100,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "Pod\u0142oga_0"
+      name: "lewaP\xF3\u0142ka_0"
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1024
+        width: 259
         height: 1024
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bdbd86c90e4cd0440800000000000000
-      internalID: 4903792038252174299
+      spriteID: 6bf6745974d953d90800000000000000
+      internalID: -7118610705216475210
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "Pod\u0142oga_0": 4903792038252174299
+      "lewaP\xF3\u0142ka_0": -7118610705216475210
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

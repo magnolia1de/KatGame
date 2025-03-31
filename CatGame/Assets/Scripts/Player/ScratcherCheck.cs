@@ -19,12 +19,12 @@ public class ScratcherCheck : MonoBehaviour
         if (other.CompareTag(correctScratcherTag))
         {
             Debug.Log("Kot dotar³ do w³aœciwego drapaka! Koniec poziomu!");
-            playerController.GainPoint();
+            playerController.LevelFinish();
         }
         else if (other.CompareTag("Scratcher"))
         {
             Debug.Log("To nie jest w³aœciwy drapak!");
-            playerController.LoseLife();
+            playerController.LoseGame();
         }
     }
 }
