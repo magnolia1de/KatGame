@@ -6,25 +6,25 @@ public class Buttons : MonoBehaviour
     public GameObject Play;
     public GameObject Settings;
     public GameObject Shop;
-
     public GameObject SettingsPanel;
 
     void Start()
     {
         SettingsPanel.SetActive(false);
-
-        //PlayerPrefs.SetInt("HasPlayedBefore", 0);
-        //PlayerPrefs.Save();
     }
 
     public void PlayButton()
     {
-        if (PlayerPrefs.GetInt("HasPlayedBefore") == 1)
+        // Sprawdzamy, czy gracz gra³ wczeœniej
+        if (PlayerPrefs.GetInt("HasPlayedBefore", 0) == 1)
         {
-            SceneManager.LoadScene(3);
+            // Pobieramy zapisany poziom
+            int savedLevel = PlayerPrefs.GetInt("SavedLevel", 3); // Domyœlnie 3, jeœli nie ma zapisu
+            SceneManager.LoadScene(savedLevel);
         }
         else
         {
+            // Jeœli to pierwsza gra, przechodzimy do tutorialu
             SceneManager.LoadScene(2);
             PlayerPrefs.SetInt("HasPlayedBefore", 1);
             PlayerPrefs.Save();

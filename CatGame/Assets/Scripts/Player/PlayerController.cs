@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        LoadProgress(); // Wczytaj zapisane punkty
         UpdatePointsUI();
     }
 
@@ -35,9 +37,8 @@ public class PlayerController : MonoBehaviour
     public void GainPoint()
     {
         playerScore++;
-        Debug.Log("Zdoby�e� punkt! Aktualny wynik: " + playerScore);
+        Debug.Log("Zdobyłeś punkt! Aktualny wynik: " + playerScore);
         UpdatePointsUI();
-        // Mo�na tu doda� aktualizacj� UI
     }
 
     private void UpdatePointsUI()
@@ -48,19 +49,48 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void LoadProgress()
+    {
+        int currentLevel = SceneManager.GetActiveScene().buildIndex;
+        if (currentLevel != 2) // Nie wczytujemy punktów w tutorialu
+        {
+            playerScore = PlayerPrefs.GetInt("SavedScore", 0);
+        }
+    }
+
+    private void SaveProgress()
+    {
+        PlayerPrefs.SetInt("SavedScore", playerScore);
+        PlayerPrefs.SetInt("SavedLevel", SceneManager.GetActiveScene().buildIndex);
+        PlayerPrefs.Save();
+    }
+
     public void LoseGame()
     {
-        Debug.Log("Przegrales!");
-        //jeśli to pierwsza gra gracza to tutorial niezaloczony, trzeba zagrać od początku
-        //podliczenie punktów i usunięcie ich
+        Debug.Log("Przegrałeś!");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void LevelFinish()
     {
-        Debug.Log("Gratulacje! Wygra?e?!");
-        //jeśli to pierwsza gra gracza to tutorial zaliczony, przejście do poziomu 1
-        //usunięcie wszystkich punktów jeśli to był tutorial, jeśli zwykła gra to podliczenie punktów i przejście do
-        //kolejnego poziomu
-        //jeśli to nie pierwsza gra to przejście do kolejnego poziomu
+        Debug.Log("🎉 Gratulacje! Ukończyłeś poziom!");
+
+        int currentLevel = SceneManager.GetActiveScene().buildIndex;
+        int nextLevel = currentLevel + 1;
+
+        if (currentLevel == 2) // Jeśli to był tutorial
+        {
+            Debug.Log("✅ Ukończyłeś tutorial! Przechodzę do poziomu 1.");
+            PlayerPrefs.SetInt("TutorialCompleted", 1);
+            PlayerPrefs.SetInt("SavedScore", 0); // Zerujemy punkty po tutorialu
+            PlayerPrefs.SetInt("SavedLevel", 3); // Ustawiamy poziom 1 jako startowy po tutorialu
+            PlayerPrefs.Save();
+            SceneManager.LoadScene(3); // Przejście do poziomu 1
+        }
+        else
+        {
+            SaveProgress(); // Zapisujemy postęp
+            SceneManager.LoadScene(nextLevel);
+        }
     }
 }

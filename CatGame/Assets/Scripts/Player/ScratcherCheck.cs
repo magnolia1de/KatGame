@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ScratcherCheck : MonoBehaviour
 {
-    public string correctScratcherTag = "CorrectScratcher";
+    public string correctScratcherTag = "GoodExit";
     private PlayerController playerController;
 
     private void Start()
@@ -21,7 +21,7 @@ public class ScratcherCheck : MonoBehaviour
             Debug.Log("Kot dotar³ do w³aœciwego drapaka! Koniec poziomu!");
             playerController.LevelFinish();
         }
-        else if (other.CompareTag("Scratcher"))
+        else if (other.CompareTag("BadExit"))
         {
             Debug.Log("To nie jest w³aœciwy drapak!");
             playerController.LoseGame();
