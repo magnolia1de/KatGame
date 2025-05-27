@@ -7,26 +7,38 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 5f;
     public float jumpForce = 5f;
-    public int playerScore = 0;
+
+    public TMP_Text pointsText;
+    public bool canMove = true;
 
     private Rigidbody2D rb;
-    public TMP_Text pointsText;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        LoadProgress(); // Wczytaj zapisane punkty
-        UpdatePointsUI();
+
+        if (SceneManager.GetActiveScene().buildIndex != 2)
+        {
+            // Poza tutorialem wczytujemy punkty z ScoreManager
+            UpdatePointsUI();
+        }
+        else
+        {
+            // W tutorialu punkty są zerowane
+            ScoreManager.ResetScore();
+            UpdatePointsUI();
+        }
     }
 
     public void Move(float horizontalInput)
     {
+        if (!canMove) return;
         rb.linearVelocity = new Vector2(horizontalInput * speed, rb.linearVelocity.y);
     }
 
     public void Jump()
     {
-        if (rb == null) return;
+        if (!canMove) return;
 
         if (Mathf.Abs(rb.linearVelocity.y) < 0.01f)
         {
@@ -36,8 +48,8 @@ public class PlayerController : MonoBehaviour
 
     public void GainPoint()
     {
-        playerScore++;
-        Debug.Log("Zdobyłeś punkt! Aktualny wynik: " + playerScore);
+        ScoreManager.AddPoints(1);
+        Debug.Log("Zdobyłeś punkt! Aktualny wynik: " + ScoreManager.GetScore());
         UpdatePointsUI();
     }
 
@@ -45,24 +57,8 @@ public class PlayerController : MonoBehaviour
     {
         if (pointsText != null)
         {
-            pointsText.text = playerScore.ToString();
+            pointsText.text = ScoreManager.GetScore().ToString();
         }
-    }
-
-    private void LoadProgress()
-    {
-        int currentLevel = SceneManager.GetActiveScene().buildIndex;
-        if (currentLevel != 2) // Nie wczytujemy punktów w tutorialu
-        {
-            playerScore = PlayerPrefs.GetInt("SavedScore", 0);
-        }
-    }
-
-    private void SaveProgress()
-    {
-        PlayerPrefs.SetInt("SavedScore", playerScore);
-        PlayerPrefs.SetInt("SavedLevel", SceneManager.GetActiveScene().buildIndex);
-        PlayerPrefs.Save();
     }
 
     public void LoseGame()
@@ -82,15 +78,21 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("✅ Ukończyłeś tutorial! Przechodzę do poziomu 1.");
             PlayerPrefs.SetInt("TutorialCompleted", 1);
-            PlayerPrefs.SetInt("SavedScore", 0); // Zerujemy punkty po tutorialu
-            PlayerPrefs.SetInt("SavedLevel", 3); // Ustawiamy poziom 1 jako startowy po tutorialu
+            ScoreManager.ResetScore(); // Zerujemy punkty
+            PlayerPrefs.SetInt("SavedLevel", 3);
             PlayerPrefs.Save();
-            SceneManager.LoadScene(3); // Przejście do poziomu 1
+            SceneManager.LoadScene(3);
         }
         else
         {
-            SaveProgress(); // Zapisujemy postęp
+            SaveProgress(); // Zapisujemy poziom, punkty są już w ScoreManager
             SceneManager.LoadScene(nextLevel);
         }
+    }
+
+    private void SaveProgress()
+    {
+        PlayerPrefs.SetInt("SavedLevel", SceneManager.GetActiveScene().buildIndex);
+        PlayerPrefs.Save();
     }
 }
